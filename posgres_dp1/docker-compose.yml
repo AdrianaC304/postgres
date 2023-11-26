@@ -2,23 +2,25 @@ version: '3.5'
  
 services:
   postgres:
-    container_name: postgres_container
     image: postgres:12.1
+    container_name: postgres_container
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Welcome01}
       PGDATA: /data/postgres
     volumes:
        - postgres:/data/postgres
+       - ./sql:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     networks:
       - postgres
-    restart: unless-stopped
+    restart: always
    
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4:4.16
+    platform: linux/amd64  # Especifica la arquitectura de la imagen porque si me nos daba error en el contenedor
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
@@ -37,3 +39,4 @@ networks:
 volumes:
     postgres:
     pgadmin:
+    sql:
