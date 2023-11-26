@@ -1,13 +1,17 @@
 version: '3.5'
  
 services:
+# 1 configuro un servicio para ejecutar una instancia de PostgreSQL.
   postgres:
+  #aqui especifico la imagen de Docker que se utilizará para crear el nuestro contenedor
     image: postgres:12.1
     container_name: postgres_container
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Welcome01}
       PGDATA: /data/postgres
+    # volumen llamado postgres y lo monta en el directorio /data/postgres dentro del contenedor.
+    # volumen para leer el sql, directorio ./sql del host en el directorio /docker-entrypoint-initdb.d dentro del contenedor
     volumes:
        - postgres:/data/postgres
        - ./sql:/docker-entrypoint-initdb.d
@@ -16,7 +20,8 @@ services:
     networks:
       - postgres
     restart: always
-   
+
+# 2
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4:4.16
@@ -31,7 +36,11 @@ services:
     networks:
       - postgres
     restart: unless-stopped
- 
+    
+#3
+
+
+# define las redes que los contenedores utilizarán
 networks:
   postgres:
     driver: bridge
